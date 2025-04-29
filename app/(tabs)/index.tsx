@@ -1,32 +1,34 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-import { View } from 'react-native';
-import PdfViewer from '../pdf-viewer';
-import {Text, Button, ActivityIndicator, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, View, Text, Image } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import LoginForm from '../../components/LoginLogout/LoginForm';
+import styles from '../../components/LoginLogout/styles';
 
 export default function HomeScreen() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+
   return (
-    <View style={{ flex: 1 }}>
-      <Text className="text-2xl font-bold mb-4">PDF Viewer</Text>
-      <PdfViewer />
-    </View>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Document Management System</Text>
+        <Image
+          source={require('../../assets/images/Chhattisgarh_logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+          onError={(e) => console.log('Logo Load Error:', e.nativeEvent.error)}
+        />
+        <LinearGradient colors={['#66bfff', '#61c2ff', '#458aff']} style={styles.formSection}>
+          <View style={styles.formContainer}>
+            {isLoggedIn ? (
+              // <DataSelector sessionId={sessionId} setIsLoggedIn={setIsLoggedIn} setSessionId={setSessionId} />
+              <Text > You have Success fully Logged in</Text>
+            ) : (
+              <LoginForm setIsLoggedIn={setIsLoggedIn} setSessionId={setSessionId} />
+            )}
+          </View>
+        </LinearGradient>
+      </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});

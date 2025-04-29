@@ -1,4 +1,5 @@
-{
+import 'dotenv/config';
+export default {
   "expo": {
     "name": "igrsExpoApp",
     "slug": "igrsExpoApp",
@@ -42,8 +43,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "df811194-057f-4b1b-9a47-ce8bdaf55567"
-      }
+        "projectId": "df811194-057f-4b1b-9a47-ce8bdaf55567",
+      },
+      BASE_URL: process.env.BASE_URL,
     },
     "owner": "vishakha293"
   }
