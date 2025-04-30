@@ -26,6 +26,13 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
   },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around', // or 'space-between' or 'center'
+    marginTop: 10,
+    flexWrap: 'wrap', // Optional: wraps if screen is narrow
+  },
+  
   formContainer: {
     backgroundColor: '#fff',
     padding: 20,
@@ -86,6 +93,14 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     alignItems: 'center',
     marginVertical: 5,
+  },
+  homeButton: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 4,
+    alignItems: 'center',
+    marginVertical: 5,
+    width:80
   },
   buttonText: {
     color: '#fff',

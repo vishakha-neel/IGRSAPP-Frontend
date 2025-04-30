@@ -1,40 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Image, ActivityIndicator, StyleSheet, Button } from 'react-native';
 import { PdfFetch } from '@/Services/NRService';
-import { Link } from 'expo-router';
+import { Link, useLocalSearchParams } from 'expo-router';
 
-const NRData = () => {
+const NRData = () => 
+{
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pageNumber, setPageNumber] = useState(1); // 👈 Page number state
 
-  // Hardcoded example parameters - replace with your own dynamic data
-  const fileID = "12345";
+  // Replace with your actual dynamic data
+  const {fileID} = useLocalSearchParams();
   const district = "DemoDistrict";
   const subDistrict = "SubDemo";
-  const pageNumber = "1";
 
   useEffect(() => {
     const fetchPdfImage = async () => {
       try {
         setLoading(true);
-        const url = await PdfFetch(fileID, district, subDistrict, pageNumber);
+        setError(null);
+        const url = await PdfFetch(fileID[0], district, subDistrict, pageNumber.toString());
         setImageUrl(url);
-      } catch (err) {
-        setError("Failed to load PDF image.");
+      } catch (err: any) {
+        const msg = err?.message || "Failed to load PDF image.";
+        if (msg.includes("Invalid page number")) {
+          setError("This page is not available in the PDF.");
+        } else {
+          setError("Failed to load PDF image.");
+        }
+        setImageUrl(null);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchPdfImage();
-  }, []);
+  }, [pageNumber]);
+  
+
+  const handleNext = () => {
+    setPageNumber(prev => prev + 1);
+  };
+
+  const handlePrevious = () => {
+    if (pageNumber > 1) {
+      setPageNumber(prev => prev - 1);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>PDF Page Viewer</Text>
+      <Text>Page: {pageNumber}</Text>
+
       {loading && <ActivityIndicator size="large" color="#0000ff" />}
       {error && <Text style={styles.error}>{error}</Text>}
+
       {imageUrl && (
         <Image
           source={{ uri: imageUrl }}
@@ -42,7 +64,13 @@ const NRData = () => {
           resizeMode="contain"
         />
       )}
-              <Link href="/pdf-viewer">Go to About</Link>
+
+      <View style={styles.buttonContainer}>
+        <Button title="Previous" onPress={handlePrevious} disabled={pageNumber === 1} />
+        <Button title="Next" onPress={handleNext} />
+      </View>
+
+      <Link href="/pdf-viewer">Go to About</Link>
     </View>
   );
 };
@@ -65,6 +93,12 @@ const styles = StyleSheet.create({
     height: 700,
     borderWidth: 2,
     borderColor: '#ccc',
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
 });
 

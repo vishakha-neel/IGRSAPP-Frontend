@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, Image } from 'react-native';
+import { ScrollView, View, Text, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import LoginForm from '../../components/LoginLogout/LoginForm';
 import styles from '../../components/LoginLogout/styles';
@@ -8,6 +8,23 @@ import { Link } from 'expo-router';
 export default function HomeScreen() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+
+  const showLoginSuccessAlert = () => {
+    Alert.alert(
+      'Login Successful',
+      'You have successfully logged in!',
+      [
+        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  // When the login form submits successfully, you call this function
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    showLoginSuccessAlert(); // Show the alert
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -22,13 +39,17 @@ export default function HomeScreen() {
         <LinearGradient colors={['#66bfff', '#61c2ff', '#458aff']} style={styles.formSection}>
           <View style={styles.formContainer}>
             {isLoggedIn ? (
-              // <DataSelector sessionId={sessionId} setIsLoggedIn={setIsLoggedIn} setSessionId={setSessionId} />
-                 <View>
-                   <Text > You have Success fully Logged in</Text>
-                   <Link href={'/NRData/NRData'}>Click Me</Link>
-                 </View> 
+              // When the user is logged in, show the success message and a link
+              <View>
+                <Text style={styles.formTitle}>Home</Text>
+                <View style={styles.buttonRow}>
+                     <Link href={'/NRData/NRDataForm'} style={[styles.homeButton, styles.buttonText]}>NR Data</Link>
+                     <Link href={'/NRData/NRData'} style={[styles.homeButton, styles.buttonText]}>DE Data</Link>
+                </View>
+              </View>
             ) : (
-              <LoginForm setIsLoggedIn={setIsLoggedIn} setSessionId={setSessionId} />
+              // If not logged in, show the login form
+              <LoginForm setIsLoggedIn={handleLoginSuccess} setSessionId={setSessionId} />
             )}
           </View>
         </LinearGradient>
