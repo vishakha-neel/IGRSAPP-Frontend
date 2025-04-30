@@ -12,7 +12,7 @@ const PdfViewer = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const backendUrl = 'https://3b4a-2401-4900-1c5c-b657-116a-9b82-76e1-ae82.ngrok-free.app/api/pdf';
+  const backendUrl = 'https://12b6-122-161-49-243.ngrok-free.app';
 
   useEffect(() => {
     console.log('useEffect triggered, fileId:', fileId);

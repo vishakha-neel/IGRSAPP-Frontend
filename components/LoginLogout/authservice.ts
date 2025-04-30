@@ -1,5 +1,4 @@
 import axios, { AxiosError } from 'axios';
-// import { sha512 } from 'js-sha512';
 import Constants from 'expo-constants';
 
 const BASE_URL = Constants.expoConfig?.extra?.BASE_URL;
@@ -14,9 +13,10 @@ export const fetchCaptcha = async (
 ) => {
   const captchaUrl = `${BASE_URL}/captcha`;
   try {
+    console.log(`${BASE_URL}/captcha`)
     const response = await axios.get(captchaUrl, {
       headers: { 'Accept': 'application/json' },
-      timeout: 5000,
+      timeout: 5000
     });
     const captchaData = response.data.captchaImage;
     if (!captchaData) throw new Error('No captchaImage field in response');

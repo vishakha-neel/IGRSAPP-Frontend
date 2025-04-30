@@ -3,6 +3,7 @@ import { ScrollView, View, Text, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import LoginForm from '../../components/LoginLogout/LoginForm';
 import styles from '../../components/LoginLogout/styles';
+import { Link } from 'expo-router';
 
 export default function HomeScreen() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,7 +23,10 @@ export default function HomeScreen() {
           <View style={styles.formContainer}>
             {isLoggedIn ? (
               // <DataSelector sessionId={sessionId} setIsLoggedIn={setIsLoggedIn} setSessionId={setSessionId} />
-              <Text > You have Success fully Logged in</Text>
+                 <View>
+                   <Text > You have Success fully Logged in</Text>
+                   <Link href={'/NRData/NRData'}>Click Me</Link>
+                 </View> 
             ) : (
               <LoginForm setIsLoggedIn={setIsLoggedIn} setSessionId={setSessionId} />
             )}
