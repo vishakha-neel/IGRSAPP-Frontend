@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, Image, Alert } from 'react-native';
+import { TouchableOpacity,ScrollView, View, Text, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import LoginForm from '../../components/LoginLogout/LoginForm';
 import styles from '../../components/LoginLogout/styles';
@@ -46,6 +46,11 @@ export default function HomeScreen() {
                      <Link href={'/NRData/NRDataForm'} style={[styles.homeButton, styles.buttonText]}>NR Data</Link>
                      <Link href={'/NRData/NRData'} style={[styles.homeButton, styles.buttonText]}>DE Data</Link>
                 </View>
+                   <Link href="/DataEntryModule/DataEntry" asChild>
+                      <TouchableOpacity style={{ backgroundColor: '#3b82f6', padding: 10, borderRadius: 6, marginTop: 10 }}>
+                        <Text style={{ color: 'white', textAlign: 'center' }}>Go to Data Entry</Text>
+                      </TouchableOpacity>
+                    </Link>
               </View>
             ) : (
               // If not logged in, show the login form
