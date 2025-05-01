@@ -1,15 +1,12 @@
 import axios from "axios";
+import Constants from 'expo-constants';
 
 export async function PdfFetch(fileID: string, district: string, subDistrict: string, pageNumber: string) {
-    const backEndUrl = " https://aa1e-2401-4900-1c5c-55a-7d1e-9295-1454-1c67.ngrok-free.app/api/pdf"; // Replace with correct ngrok or prod URL
-    const url = `${backEndUrl}/${fileID}/${district}/${subDistrict}/${pageNumber}`;
+    const BASE_URL = Constants.expoConfig?.extra?.BASE_URL; // Replace with correct ngrok or prod URL
+    const url = `${BASE_URL}/api/pdf/${fileID}/${district}/${subDistrict}/${pageNumber}`;
 
     try {
-        const response = await axios.get(url, {
-            headers: {
-                'bypass-tunnel-reminder': 'true',
-            }
-        });
+        const response = await axios.get(url);
 
         const base64 = response.data;
 

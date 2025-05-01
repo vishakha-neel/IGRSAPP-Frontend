@@ -3,8 +3,6 @@ import Constants from 'expo-constants';
 
 const BASE_URL = Constants.expoConfig?.extra?.BASE_URL;
 
-console.log("BASE_URL:", BASE_URL);
-
 
 export const fetchCaptcha = async (
   setCaptchaImage: (value: string) => void,

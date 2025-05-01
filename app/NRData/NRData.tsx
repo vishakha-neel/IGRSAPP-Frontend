@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ActivityIndicator, StyleSheet, Button } from 'react-native';
+import { View, Text, Image, ActivityIndicator, StyleSheet, Button, Dimensions } from 'react-native';
 import { PdfFetch } from '@/Services/NRService';
 import { Link, useLocalSearchParams } from 'expo-router';
+
+const { width, height } = Dimensions.get('window');
 
 const NRData = () => 
 {
@@ -11,16 +13,14 @@ const NRData = () =>
   const [pageNumber, setPageNumber] = useState(1); // 👈 Page number state
 
   // Replace with your actual dynamic data
-  const {fileID} = useLocalSearchParams();
-  const district = "DemoDistrict";
-  const subDistrict = "SubDemo";
+  const {fileID , district , subDistrict} = useLocalSearchParams();
 
   useEffect(() => {
     const fetchPdfImage = async () => {
       try {
         setLoading(true);
         setError(null);
-        const url = await PdfFetch(fileID[0], district, subDistrict, pageNumber.toString());
+        const url = await PdfFetch(fileID.toString(), district.toString(), subDistrict.toString(), pageNumber.toString());
         setImageUrl(url);
       } catch (err: any) {
         const msg = err?.message || "Failed to load PDF image.";
@@ -67,38 +67,82 @@ const NRData = () =>
 
       <View style={styles.buttonContainer}>
         <Button title="Previous" onPress={handlePrevious} disabled={pageNumber === 1} />
+        <Link
+            href={{
+            pathname: "/Camera/CameraScreen",
+            params: {
+              fileID: fileID,
+              district: district,
+              subDistrict: subDistrict,
+              pageNumber:pageNumber
+            },
+                  }}
+            style={styles.button}>
+            Replace
+        </Link>
+        <Link
+            href={{
+            pathname: "/Camera/CameraScreen",
+            params: {
+              fileID: fileID,
+              district: district,
+              subDistrict: subDistrict,
+              pageNumber:pageNumber
+            },
+                  }}
+            style={styles.button}>
+            Add
+        </Link>
+        <Link
+            href={{
+            pathname: "/Camera/CameraScreen",
+            params: {
+              fileID: fileID,
+              district: district,
+              subDistrict: subDistrict,
+              pageNumber:pageNumber
+            },
+                  }}
+            style={styles.button}>
+            Delete
+        </Link>
         <Button title="Next" onPress={handleNext} />
       </View>
-
-      <Link href="/pdf-viewer">Go to About</Link>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 13,
+    padding: width * 0.035, // roughly 13px on a 375px-wide screen
   },
   heading: {
-    fontSize: 20,
-    marginBottom: 5,
+    fontSize: width * 0.053, // ~20px on standard screen
+    marginBottom: height * 0.006,
     fontWeight: 'bold',
   },
   error: {
     color: 'red',
-    marginBottom: 5,
+    marginBottom: height * 0.006,
   },
   image: {
     width: '100%',
-    height: 700,
+    height: height * 0.7, // 70% of screen height
     borderWidth: 2,
     borderColor: '#ccc',
-    marginBottom: 10,
+    marginBottom: height * 0.015,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: height * 0.015,
+  },
+  button: {
+    backgroundColor: '#28a745',
+    padding: 5, // ~5px on standard screen
+    borderRadius: 4,
+    alignItems: 'center',
+   // Optional: makes buttons flexible inside containe // spacing between buttons
   },
 });
 

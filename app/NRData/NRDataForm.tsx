@@ -1,21 +1,43 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  Dimensions
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
+import districtData from '@/MetaData/districtMetaData';
+
+const { width, height } = Dimensions.get('window');
 
 const NRDataFrom = () => {
   const [fileID, setFileID] = useState('');
-  const [district, setDistrict] = useState('');
-  const [subDistrict, setSubDistrict] = useState('');
+  const [district, setDistrict] = useState(Object.keys(districtData)[0]);
+  const [subDistrict, setSubDistrict] = useState(
+    districtData[Object.keys(districtData)[0]][0].name
+  );
   const router = useRouter();
+
+  useEffect(() => 
+    {
+    if (district && districtData[district]) {
+      setSubDistrict(districtData[district][0].name);
+    }
+  }, [district]);
 
   const handleSubmit = () => {
     if (!fileID.trim()) {
       Alert.alert('Validation Error', 'Please enter a File ID');
       return;
     }
-
-    router.push({ pathname: '/NRData/NRData', params: { fileID } });
+    router.push({
+      pathname: '/NRData/NRData',
+      params: { fileID, district, subDistrict },
+    });
   };
 
   return (
@@ -28,46 +50,27 @@ const NRDataFrom = () => {
         placeholder="e.g.,1234RG764"
       />
 
-<Text style={styles.label}>Select District:</Text>
+      <Text style={styles.label}>Select District:</Text>
       <Picker
         selectedValue={district}
         style={styles.picker}
-        onValueChange={(itemValue) => setDistrict(itemValue)}
+        onValueChange={(value) => setDistrict(value)}
       >
-        <Picker.Item label="Balod" value="Raipur" />
-        <Picker.Item label="BalodaBazar" value="Bilaspur" />
-        <Picker.Item label="Bastar" value="Durg" />
-        <Picker.Item label="Bemetara" value="Raipur" />
-        <Picker.Item label="Bilaspur" value="Bilaspur" />
-        <Picker.Item label="Dantewada" value="Durg" />
-        <Picker.Item label="Dhamtari" value="Raipur" />
-        <Picker.Item label="Durg" value="Bilaspur" />
-        <Picker.Item label="Gariyaband" value="Durg" />
-        <Picker.Item label="JanjgirChampa" value="Raipur" />
-        <Picker.Item label="Jashpur" value="Bilaspur" />
-        <Picker.Item label="Kanker" value="Durg" />
-        <Picker.Item label="Korba" value="Raipur" />
-        <Picker.Item label="Koriya" value="Bilaspur" />
-        <Picker.Item label="Mahasamund" value="Durg" />
-        <Picker.Item label="Mungeli" value="Raipur" />
-        <Picker.Item label="Raigarh" value="Bilaspur" />
-        <Picker.Item label="Raipur" value="Durg" />
-        <Picker.Item label="Mungeli" value="Raipur" />
-        <Picker.Item label="Raigarh" value="Bilaspur" />
-        <Picker.Item label="Raipur" value="Durg" />
+        {Object.keys(districtData).map((dist) => (
+          <Picker.Item key={dist} label={dist} value={dist} />
+        ))}
       </Picker>
 
       <Text style={styles.label}>Select Subdistrict:</Text>
       <Picker
         selectedValue={subDistrict}
         style={styles.picker}
-        onValueChange={(itemValue) => setSubDistrict(itemValue)}
+        onValueChange={(value) => setSubDistrict(value)}
       >
-        <Picker.Item label="Abhanpur" value="Abhanpur" />
-        <Picker.Item label="Tilda" value="Tilda" />
-        <Picker.Item label="Arang" value="Arang" />
+        {districtData[district].map((sub) => (
+          <Picker.Item key={sub.code} label={sub.name} value={sub.name} />
+        ))}
       </Picker>
-
 
       <Button title="Search File" onPress={handleSubmit} />
     </View>
@@ -76,25 +79,25 @@ const NRDataFrom = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    marginTop: 100,
+    padding: width * 0.05, // 5% of screen width
+    marginTop: height * 0.1, // 10% of screen height
   },
   label: {
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: width * 0.045, // ~18px on standard screen
+    marginBottom: height * 0.015,
   },
   input: {
     borderWidth: 1,
     borderColor: '#aaa',
     borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
+    padding: width * 0.035,
+    marginBottom: height * 0.025,
   },
   picker: {
-    height: 50,
+    height: height * 0.065, // Around 50px
     width: '100%',
-    marginVertical: 10,
-  }
+    marginBottom: height * 0.025,
+  },
 });
 
 export default NRDataFrom;
