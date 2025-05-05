@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ActivityIndicator, StyleSheet, Button, Dimensions } from 'react-native';
+import { View, Text, Image, ActivityIndicator, StyleSheet, Button, Dimensions, Alert } from 'react-native';
 import { PdfFetch } from '@/Services/NRService';
 import { Link, useLocalSearchParams } from 'expo-router';
+import { deletePage } from '@/Services/CameraService';
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,9 +50,30 @@ const NRData = () =>
     }
   };
 
+  const handleDelete = () =>{
+    Alert.alert(
+      "Confirm",
+      "Do you want to delete the page from the original pdf .?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async() => {
+               const msg= await deletePage(fileID.toString(),district.toString(),subDistrict.toString(),pageNumber.toString());
+               Alert.alert("Response",msg);
+          },
+        },
+      ]
+    );
+
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>PDF Page Viewer</Text>
+      <Text style={styles.heading}>PDF Viewer</Text>
       <Text>Page: {pageNumber}</Text>
 
       {loading && <ActivityIndicator size="large" color="#0000ff" />}
@@ -74,7 +96,8 @@ const NRData = () =>
               fileID: fileID,
               district: district,
               subDistrict: subDistrict,
-              pageNumber:pageNumber
+              pageNumber:pageNumber,
+              source: "replace"
             },
                   }}
             style={styles.button}>
@@ -87,25 +110,14 @@ const NRData = () =>
               fileID: fileID,
               district: district,
               subDistrict: subDistrict,
-              pageNumber:pageNumber
+              pageNumber:pageNumber,
+              source: "add"
             },
                   }}
             style={styles.button}>
             Add
         </Link>
-        <Link
-            href={{
-            pathname: "/Camera/CameraScreen",
-            params: {
-              fileID: fileID,
-              district: district,
-              subDistrict: subDistrict,
-              pageNumber:pageNumber
-            },
-                  }}
-            style={styles.button}>
-            Delete
-        </Link>
+        <Button onPress={handleDelete}  title="Delete" />
         <Button title="Next" onPress={handleNext} />
       </View>
     </View>
@@ -139,9 +151,10 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#28a745',
-    padding: 5, // ~5px on standard screen
+    padding: 6, // ~5px on standard screen
     borderRadius: 4,
     alignItems: 'center',
+    color:'white'
    // Optional: makes buttons flexible inside containe // spacing between buttons
   },
 });

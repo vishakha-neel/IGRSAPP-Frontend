@@ -8,17 +8,17 @@ import {
   import { Image } from "expo-image";
   import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useLocalSearchParams } from "expo-router";
-import uploadImage from "@/Services/CameraService";
+import uploadImage, { addImage } from "@/Services/CameraService";
   
   export default function App() 
   {
 
-    const { fileID, district, subDistrict, pageNumber} = useLocalSearchParams();
+    const { fileID, district, subDistrict, pageNumber , source} = useLocalSearchParams();
     const [permission, requestPermission] = useCameraPermissions();
     const ref = useRef<CameraView>(null);
     const [uri, setUri] = useState<string | null | undefined>(null);
     const [facing, setFacing] = useState<CameraType>("back");
-  
+   
     if (!permission) return null;
   
     if (!permission.granted) {
@@ -44,14 +44,20 @@ import uploadImage from "@/Services/CameraService";
 const sendToBackend = async () => {
   if (!uri) return;
 
-  const success = await uploadImage(fileID.toString() , district.toString() , subDistrict.toString() , pageNumber.toString() ,uri);
+  let success ;
 
-  if (success) {
-    Alert.alert('Image uploaded successfully!');
-    setUri(null);
-  } else {
-    Alert.alert('Error uploading image');
+  if(source==='replace')
+  {
+    success = await uploadImage(fileID.toString() , district.toString() , subDistrict.toString() , pageNumber.toString() ,uri);
   }
+
+  if(source === 'add')
+  {
+    success = await addImage(fileID.toString() , district.toString() , subDistrict.toString() , pageNumber.toString() ,uri);
+  }
+
+    Alert.alert(success);
+    setUri(null);
 };
   
     const renderPicture = () => (
@@ -62,7 +68,9 @@ const sendToBackend = async () => {
           style={{ width: 300, aspectRatio: 1, marginBottom: 10 }}
         />
         <Button onPress={() => setUri(null)} title="Retake" />
-        <Button onPress={sendToBackend} title="OK (Send to Server)" />
+        <View style={{ marginTop: 20 }}>
+        <Button onPress={sendToBackend} title="OK (Replace Page with this Picture)" color="orange"/>
+        </View>
       </View>
     );
   
