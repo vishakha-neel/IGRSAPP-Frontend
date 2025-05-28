@@ -1,14 +1,46 @@
 import axios from "axios";
 import Constants from 'expo-constants';
 
-export async function PdfFetch(fileID: string, district: string, subDistrict: string, pageNumber: string) {
+type FileResponse = {
+    data:{
+    imageBase64: string;
+    totalPages: string;
+    }
+  };
+
+export async function PdfFetch(fileID: string, district: string, subDistrict: string, pageNumber: string , type:string , setTotalPage :(count: string) => void ) {
     const BASE_URL = Constants.expoConfig?.extra?.BASE_URL; // Replace with correct ngrok or prod URL
     const url = `${BASE_URL}/api/pdf/${fileID}/${district}/${subDistrict}/${pageNumber}`;
+    const url2= `${BASE_URL}/getImageByFileId`
 
     try {
-        const response = await axios.get(url);
 
-        const base64 = response.data;
+        let response:FileResponse = {data:{imageBase64:'',totalPages:''}};
+        let base64 = '';
+
+        if(type==='DE')
+        {
+            const requestBody = {
+                fileId: fileID,
+                district: district,
+                subdistrict: subDistrict,
+                pageNumber : pageNumber
+              };
+              response = await axios.post(url2, requestBody, {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              });
+
+              base64 = response.data.imageBase64;
+              setTotalPage(response.data.totalPages);
+        }
+        else
+        {
+            response = await axios.get(url);
+            base64 = response.data.imageBase64;
+            setTotalPage(response.data.totalPages);
+        }
 
         if (base64.startsWith('iVBOR')) {
             const imageUrl = `data:image/png;base64,${base64}`;

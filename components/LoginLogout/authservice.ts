@@ -41,9 +41,9 @@ export const handleLogin = async (userId: string, password: string, captcha: str
     }, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
-    return { success: response.data.success, sessionId: response.data.sessionId, message: response.data.message };
+    return { success: response.data.success, sessionId: response.data.sessionId, message: response.data.message , isAdmin :response.data.isAdmin};
   } catch (error) {
-    return { success: false, message: axios.isAxiosError(error) ? error.message : 'Unknown error' };
+    return { success: false, message: axios.isAxiosError(error) ? error.message : 'Unknown error' , sAdmin :false};
   }
 };
 
