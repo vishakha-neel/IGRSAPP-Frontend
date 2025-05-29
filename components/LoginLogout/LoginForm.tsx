@@ -6,9 +6,10 @@ import styles from './styles';
 interface LoginFormProps {
   setIsLoggedIn: (value: boolean) => void;
   setSessionId: (value: string | null) => void;
+  setIsAdmin:   (value: boolean) => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ setIsLoggedIn, setSessionId }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ setIsLoggedIn, setSessionId , setIsAdmin}) => {
   const [userId, setUserId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [captcha, setCaptcha] = useState<string>('');
@@ -21,9 +22,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ setIsLoggedIn, setSessionId }) =>
   }, []);
 
   const onLogin = async () => {
-    const { success, sessionId: newSessionId, message } = await handleLogin(userId, password, captcha);
+    const { success, sessionId: newSessionId, message, isAdmin } = await handleLogin(userId, password, captcha);
     setMessage(message);
     if (success) {
+      setIsAdmin(isAdmin);
       setIsLoggedIn(true);
       setSessionId(newSessionId);
       setUserId('');

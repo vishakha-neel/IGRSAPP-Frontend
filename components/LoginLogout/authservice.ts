@@ -3,8 +3,6 @@ import Constants from 'expo-constants';
 
 const BASE_URL = Constants.expoConfig?.extra?.BASE_URL;
 
-console.log("BASE_URL:", BASE_URL);
-
 
 export const fetchCaptcha = async (
   setCaptchaImage: (value: string) => void,
@@ -43,9 +41,9 @@ export const handleLogin = async (userId: string, password: string, captcha: str
     }, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
-    return { success: response.data.success, sessionId: response.data.sessionId, message: response.data.message };
+    return { success: response.data.success, sessionId: response.data.sessionId, message: response.data.message , isAdmin :response.data.isAdmin};
   } catch (error) {
-    return { success: false, message: axios.isAxiosError(error) ? error.message : 'Unknown error' };
+    return { success: false, message: axios.isAxiosError(error) ? error.message : 'Unknown error' , sAdmin :false};
   }
 };
 
