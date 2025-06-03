@@ -44,7 +44,7 @@ export default {
           backgroundColor: "#ffffff",
         },
       ],
-      "react-native-document-scanner-plugin", // Add the plugin here
+      "react-native-document-scanner-plugin", 
     ],
     experiments: {
       typedRoutes: true,
@@ -56,7 +56,7 @@ export default {
       eas: {
         projectId: "df811194-057f-4b1b-9a47-ce8bdaf55567",
       },
-      BASE_URL: process.env.BASE_URL,
+      BASE_URL: "https://cgigrsdocument.com/igrsapp",
     },
     owner: "devlo_pteam",
   },
